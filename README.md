@@ -25,7 +25,7 @@ $ mvn package
 
 # 使用
 
-本工具需要使用JDK 1.8版本（更高版本将导致异常）。
+本工具需要使用Oracle JDK 1.8版本（更高版本将导致异常）。
 
 ```sh
 $ java -jar .\target\JDumpSpider-1.0-SNAPSHOT-full.jar                  

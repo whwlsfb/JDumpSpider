@@ -14,9 +14,11 @@ $ mvn package
     - SpringDataSourceProperties
     - WeblogicDataSourceConnectionPoolConfig
     - MongoClient
+    - AliDruidDataSourceWrapper
 - 配置文件信息
     - OriginTrackedMapPropertySource
     - MutablePropertySources
+    - OSS
 - Redis配置提取
     - RedisStandaloneConfiguration
     - JedisClient

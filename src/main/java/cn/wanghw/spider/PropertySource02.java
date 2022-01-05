@@ -1,6 +1,7 @@
 package cn.wanghw.spider;
 
 import cn.wanghw.ISpider;
+import cn.wanghw.utils.OQLSnippets;
 import org.graalvm.visualvm.lib.jfluid.heap.Heap;
 import org.graalvm.visualvm.lib.profiler.oql.engine.api.OQLEngine;
 
@@ -27,11 +28,16 @@ public class PropertySource02 implements ISpider {
                 }
                 return false;
             });
+            List<String> seenKeys = new ArrayList<>();
             for (Long objId : listObjId) {
-                oqlEngine.executeQuery("select map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null'), \"{'key':it.key.value && it.key.value.toString(),'value':it.value.value.toString()}\")", o -> {
+                oqlEngine.executeQuery(OQLSnippets.getValue + "map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null'), \"{'key':it.key.value && it.key.value.toString(),'value':getValue(it.value)}\")", o -> {
                     if (o instanceof HashMap) {
                         HashMap<String, String> hashMap = (HashMap<String, String>) o;
-                        result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";
+                        String key = hashMap.get("key");
+                        if (!seenKeys.contains(key)) {
+                            result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";
+                            seenKeys.add(hashMap.get("key"));
+                        }
                     }
                     return false;
                 });

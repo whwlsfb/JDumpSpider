@@ -28,7 +28,8 @@ public class Main implements Callable<Integer> {
             new Redis01(),
             new Redis02(),
             new PropertySource01(),
-            new PropertySource02()
+            new PropertySource02(),
+            new OSS01()
     };
 
     @Override

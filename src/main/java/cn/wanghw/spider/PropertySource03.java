@@ -9,20 +9,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PropertySource01 implements ISpider {
+public class PropertySource03 implements ISpider {
 
     @Override
     public String getName() {
-        return "OriginTrackedMapPropertySource";
+        return "MapPropertySources";
     }
 
     @Override
     public String sniff(Heap heap) {
         final String[] result = {""};
+        long currentObjId = 0;
         try {
             List<Long> listObjId = new ArrayList<>();
             OQLEngine oqlEngine = new OQLEngine(heap);
-            oqlEngine.executeQuery("select map(filter(map(x.source.m ? x.source.m.table : x.source.table, 'it'), 'it != null'),\"it.id\") from org.springframework.boot.env.OriginTrackedMapPropertySource x", o -> {
+            oqlEngine.executeQuery(OQLSnippets.getTable + OQLSnippets.isMap + "map(filter(map(filter(map(heap.objects('org.springframework.core.env.MapPropertySource'), 'it.source'), 'isMap(it)'), 'getTable(it)'), 'it != null'), 'it.id');", o -> {
                 if (o instanceof Long) {
                     listObjId.add((Long) o);
                 }
@@ -30,7 +31,8 @@ public class PropertySource01 implements ISpider {
             });
             List<String> seenKeys = new ArrayList<>();
             for (Long objId : listObjId) {
-                oqlEngine.executeQuery(OQLSnippets.getValue + "map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null'), \"{'key':it.key.value && it.key.value.toString(),'value':getValue(it.value)}\")", o -> {
+                currentObjId = objId;
+                oqlEngine.executeQuery(OQLSnippets.getValue + "map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null'), \"{'key': getValue(it.key),'value':getValue(it.value)}\")", o -> {
                     if (o instanceof HashMap) {
                         HashMap<String, String> hashMap = (HashMap<String, String>) o;
                         String key = hashMap.get("key");
@@ -46,7 +48,7 @@ public class PropertySource01 implements ISpider {
             if (result[0].equals("") && ex.getMessage().contains("is not found!")) {
                 result[0] = "not found!\r\n";
             } else {
-                System.out.println(ex);
+                System.out.println(ex + " objId: " + currentObjId);
             }
         }
         return result[0];

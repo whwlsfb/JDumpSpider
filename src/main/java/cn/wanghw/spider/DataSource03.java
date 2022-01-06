@@ -55,8 +55,10 @@ public class DataSource03 implements ISpider {
                 }
             }
         } catch (Exception ex) {
-            if (!result[0].equals("")) {
-                result[0] = "not found!";
+            if (result[0].equals("") && ex.getMessage().contains("is not found!")) {
+                result[0] = "not found!\r\n";
+            } else {
+                System.out.println(ex);
             }
         }
         return result[0];

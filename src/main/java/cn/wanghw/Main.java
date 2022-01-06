@@ -29,6 +29,7 @@ public class Main implements Callable<Integer> {
             new Redis02(),
             new PropertySource01(),
             new PropertySource02(),
+            new PropertySource03(),
             new OSS01()
     };
 

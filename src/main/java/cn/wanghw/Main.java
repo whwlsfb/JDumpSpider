@@ -44,7 +44,7 @@ public class Main implements Callable<Integer> {
             if (!result.equals("")) {
                 System.out.println(result);
             } else {
-                System.out.println("empty!\r\n");
+                System.out.println("not found!\r\n");
             }
         }
         System.out.println("===========================================");

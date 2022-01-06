@@ -16,6 +16,7 @@ $ mvn package
     - MongoClient
     - AliDruidDataSourceWrapper
 - 配置文件信息
+    - MapPropertySources
     - OriginTrackedMapPropertySource
     - MutablePropertySources
     - OSS

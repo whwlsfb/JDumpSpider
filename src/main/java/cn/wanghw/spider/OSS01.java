@@ -2,6 +2,7 @@ package cn.wanghw.spider;
 
 import cn.wanghw.ISpider;
 import cn.wanghw.utils.HashMapUtils;
+import cn.wanghw.utils.OQLSnippets;
 import org.graalvm.visualvm.lib.jfluid.heap.Heap;
 import org.graalvm.visualvm.lib.profiler.oql.engine.api.OQLEngine;
 
@@ -29,14 +30,14 @@ public class OSS01 implements ISpider {
         final String[] result = {""};
         try {
             OQLEngine oqlEngine = new OQLEngine(heap);
-            oqlEngine.executeQuery("filter(map(filter(heap.objects('java.util.Hashtable$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value':it.value.toString()}\"), \"" + searchPart + "\")", o -> {
+            oqlEngine.executeQuery(OQLSnippets.getValue + "filter(map(filter(heap.objects('java.util.Hashtable$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value': getValue(it.value)}\"), \"" + searchPart + "\")", o -> {
                 if (o instanceof HashMap) {
                     HashMap<String, String> hashMap = (HashMap<String, String>) o;
                     result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";
                 }
                 return false;
             });
-            oqlEngine.executeQuery("filter(map(filter(heap.objects('java.util.LinkedHashMap$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value':it.value.toString()}\"), \"" + searchPart + "\")", o -> {
+            oqlEngine.executeQuery(OQLSnippets.getValue + "filter(map(filter(heap.objects('java.util.LinkedHashMap$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value': getValue(it.value)}\"), \"" + searchPart + "\")", o -> {
                 if (o instanceof HashMap) {
                     HashMap<String, String> hashMap = (HashMap<String, String>) o;
                     result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";

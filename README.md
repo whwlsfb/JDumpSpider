@@ -19,7 +19,7 @@ $ mvn package
     - MapPropertySources
     - OriginTrackedMapPropertySource
     - MutablePropertySources
-    - OSS
+    - OSS（模糊搜索）
 - Redis配置
     - RedisStandaloneConfiguration
     - JedisClient

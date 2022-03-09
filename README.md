@@ -27,6 +27,8 @@ $ mvn package
 - Redis配置
     - RedisStandaloneConfiguration
     - JedisClient
+- ShiroKey
+    - CookieRememberMeManager 
 
 更多类型支持尽请期待。
 

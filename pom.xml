@@ -95,6 +95,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.graalvm.visualvm.api/org-graalvm-visualvm-application-views -->
         <dependency>
             <groupId>org.graalvm.visualvm.api</groupId>

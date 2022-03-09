@@ -7,18 +7,20 @@ public class OQLSnippets {
             "}\n";
     public static final String getValue = isNullOrUndefined +
             "function getValue(val) {\n" +
-            "  return !isNullOrUndefined(val)\n" +
-            "    ? !isNullOrUndefined(val.value)\n" +
-            "      ? !isNullOrUndefined(val.value.value)\n" +
-            "        ? !isNullOrUndefined(val.value.value.value)\n" +
-            "          ? val.value.value.value.toString()\n" +
-            "          : val.value.value.toString()\n" +
-            "        : val.value.toString()\n" +
-            "      : !isNullOrUndefined(val.str)\n" +
-            "      ? val.str.toString()\n" +
-            "      : val.toString()\n" +
-            "    : null;\n" +
-            "}\n";
+            "    if (!isNullOrUndefined(val)) {\n" +
+            "        if (classof(val) == undefined || classof(val).name == \"java.lang.String\") {\n" +
+            "            return val.toString();\n" +
+            "        } else if (!isNullOrUndefined(val.str)) {\n" +
+            "            return val.str.toString();\n" +
+            "        } else if (!isNullOrUndefined(val.value)) {\n" +
+            "            return getValue(val.value);\n" +
+            "        } else {\n" +
+            "            return null;\n" +
+            "        } \n" +
+            "    }else {\n" +
+            "        return null;\n" +
+            "    }\n" +
+            "}";
     public static final String getTable = "\n" +
             "function getTable(source) {\n" +
             "   return source ? (source.table || (source.m ? source.m.m ? source.m.m.table : source.m.table : null)) : null;\n" +

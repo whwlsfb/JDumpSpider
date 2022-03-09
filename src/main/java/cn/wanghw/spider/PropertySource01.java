@@ -30,7 +30,7 @@ public class PropertySource01 implements ISpider {
             });
             List<String> seenKeys = new ArrayList<>();
             for (Long objId : listObjId) {
-                oqlEngine.executeQuery(OQLSnippets.getValue + "map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null'), \"{'key':it.key.value && it.key.value.toString(),'value':getValue(it.value)}\")", o -> {
+                oqlEngine.executeQuery(OQLSnippets.getValue + "map(filter(map(heap.findObject(" + objId.toString() + "), 'it'), 'it != null && it.key'), \"{'key':getValue(it.key),'value':getValue(it.value)}\")", o -> {
                     if (o instanceof HashMap) {
                         HashMap<String, String> hashMap = (HashMap<String, String>) o;
                         String key = hashMap.get("key");

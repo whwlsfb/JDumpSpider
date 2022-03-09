@@ -1,6 +1,10 @@
 # JDumpSpider
 HeapDump敏感信息提取工具
 
+# 下载
+
+预编译包：[Releases](https://github.com/whwlsfb/JDumpSpider/releases)
+
 # 编译
 需要Maven、JDK 1.8。
 ```

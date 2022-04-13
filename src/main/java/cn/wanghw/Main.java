@@ -31,6 +31,7 @@ public class Main implements Callable<Integer> {
             new PropertySource01(),
             new PropertySource02(),
             new PropertySource03(),
+            new PropertySource04(),
             new OSS01()
     };
 

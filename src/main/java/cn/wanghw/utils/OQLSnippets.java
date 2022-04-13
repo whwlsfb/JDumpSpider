@@ -7,8 +7,8 @@ public class OQLSnippets {
             "}\n";
     public static final String getValue = isNullOrUndefined +
             "function getValue(val) {\n" +
-            "    if (!isNullOrUndefined(val)) {\n" +
-            "        if (classof(val) == undefined || classof(val).name == \"java.lang.String\") {\n" +
+            "    if (val != null && !isNullOrUndefined(val)) {\n" +
+            "        if (unwrapJavaObject(val) != null && (classof(val) == undefined || classof(val).name == \"java.lang.String\") ) {\n" +
             "            return val.toString();\n" +
             "        } else if (!isNullOrUndefined(val.str)) {\n" +
             "            return val.str.toString();\n" +

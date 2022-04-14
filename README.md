@@ -20,9 +20,10 @@ $ mvn package
     - MongoClient
     - AliDruidDataSourceWrapper
 - 配置文件信息
-    - MapPropertySources
+    - MapPropertySource
     - OriginTrackedMapPropertySource
-    - MutablePropertySources
+    - MutablePropertySource
+    - ConsulPropertySource
     - OSS（模糊搜索）
 - Redis配置
     - RedisStandaloneConfiguration

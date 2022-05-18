@@ -15,7 +15,8 @@ public class OSS01 implements ISpider {
     }
 
     private static final String searchPart =
-             "((it.searchKey.contains('oss.') || " +
+             "((it.searchKey.contains('oss.') || " + //aliyun oss
+              "(it.searchKey.contains('cos.') || " + //tencent cos
                      "(it.searchKey.contains('file') && " +
                      "it.searchKey.contains('upload')) ) && " +
              "((it.searchKey.contains('key') && " +

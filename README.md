@@ -19,6 +19,7 @@ $ mvn package
     - WeblogicDataSourceConnectionPoolConfig
     - MongoClient
     - AliDruidDataSourceWrapper
+    - HikariDataSource
 - 配置文件信息
     - MapPropertySource
     - OriginTrackedMapPropertySource
@@ -29,7 +30,9 @@ $ mvn package
     - RedisStandaloneConfiguration
     - JedisClient
 - ShiroKey
-    - CookieRememberMeManager 
+    - CookieRememberMeManager
+- JwtKey
+    - SpringSecurityRsaSigner
 
 更多类型支持尽请期待。
 

@@ -25,6 +25,7 @@ public class Main implements Callable<Integer> {
             new DataSource02(),
             new DataSource03(),
             new DataSource04(),
+            new DataSource05(),
             new Redis01(),
             new Redis02(),
             new ShiroKey01(),

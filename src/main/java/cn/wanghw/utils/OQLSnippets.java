@@ -3,8 +3,8 @@ package cn.wanghw.utils;
 public class OQLSnippets {
     public static final String isNullOrUndefined =
             "function isNullOrUndefined(val) {\n" +
-            "  return val == null || val == undefined;\n" +
-            "}\n";
+                    "  return val == null || val == undefined;\n" +
+                    "}\n";
     public static final String getValue = isNullOrUndefined +
             "function getValue(val) {\n" +
             "    if (val != null && !isNullOrUndefined(val)) {\n" +
@@ -24,6 +24,14 @@ public class OQLSnippets {
     public static final String getTable = "\n" +
             "function getTable(source) {\n" +
             "   return source ? (source.table || (source.m ? source.m.m ? source.m.m.table : source.m.table : null)) : null;\n" +
+            "}\n";
+    public static final String unwrapMapEx = getValue + "\n" +
+            "function unwrapMapEx(jobject) {\n" +
+            "    var map = new java.util.HashMap();\n" +
+            "    for(var prop in jobject) {\n" +
+            "        map.put(prop, getValue(jobject[prop]));\n" +
+            "    }\n" +
+            "    return map;\n" +
             "}\n";
     public static final String isMap = "\n" +
             "function isMap(it) {\n" +

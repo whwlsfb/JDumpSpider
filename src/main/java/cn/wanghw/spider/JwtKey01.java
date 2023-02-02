@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.RSAPrivateCrtKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class JwtKey01 implements ISpider {
     @Override
@@ -25,9 +26,9 @@ public class JwtKey01 implements ISpider {
 
     @Override
     public String sniff(Heap heap) {
-        final String[] result = {""};
+        final StringBuilder result = new StringBuilder();
         try {
-
+            AtomicInteger index = new AtomicInteger();
             OQLEngine oqlEngine = new OQLEngine(heap);
             oqlEngine.executeQuery("select {'Algorithm':x.algorithm.toString(),'privateKey':{" +
                     "'coeff':x.key.coeff," +    // CRT coeffcient
@@ -45,7 +46,7 @@ public class JwtKey01 implements ISpider {
                         HashMap<String, String> resultSet = new HashMap<>();
                         if (hashMap.containsKey("privateKey")) {
                             if (hashMap.get("privateKey") instanceof ScriptObjectMirror) {
-                                ScriptObjectMirror privKey = (ScriptObjectMirror) hashMap.get("privateKey") ;
+                                ScriptObjectMirror privKey = (ScriptObjectMirror) hashMap.get("privateKey");
                                 RSAPrivateCrtKeySpec rsaPrivateCrtKeySpec = new RSAPrivateCrtKeySpec(
                                         CommonUtils.getBigInteger(privKey.get("n")),
                                         CommonUtils.getBigInteger(privKey.get("e")),
@@ -68,7 +69,8 @@ public class JwtKey01 implements ISpider {
                                 resultSet.put("Algorithm", hashMap.get("Algorithm").toString());
                             }
                         }
-                        result[0] = HashMapUtils.dumpString(resultSet, false);
+                        result.append("# No.").append(index.incrementAndGet()).append(":\r\n");
+                        result.append(HashMapUtils.dumpString(resultSet, false));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -76,13 +78,13 @@ public class JwtKey01 implements ISpider {
                 return false;
             });
         } catch (Exception ex) {
-            if (result[0].equals("") && ex.getMessage().contains("is not found!")) {
-                result[0] = "not found!\r\n";
+            if (result.toString().equals("") && ex.getMessage().contains("is not found!")) {
+                result.append("not found!\r\n");
             } else {
                 System.out.println(ex);
             }
         }
-        return result[0];
+        return result.toString();
     }
 
 }

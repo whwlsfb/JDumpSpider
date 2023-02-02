@@ -15,24 +15,26 @@ $ mvn package
 暂支持提取以下类型的敏感信息
 
 - 数据源
-    - SpringDataSourceProperties
-    - WeblogicDataSourceConnectionPoolConfig
-    - MongoClient
-    - AliDruidDataSourceWrapper
-    - HikariDataSource
+  - SpringDataSourceProperties
+  - WeblogicDataSourceConnectionPoolConfig
+  - MongoClient
+  - AliDruidDataSourceWrapper
+  - HikariDataSource
 - 配置文件信息
-    - MapPropertySource
-    - OriginTrackedMapPropertySource
-    - MutablePropertySource
-    - ConsulPropertySource
-    - OSS（模糊搜索）
+  - MapPropertySource
+  - OriginTrackedMapPropertySource
+  - MutablePropertySource
+  - ConsulPropertySource
+  - OSS（模糊搜索）
 - Redis配置
-    - RedisStandaloneConfiguration
-    - JedisClient
+  - RedisStandaloneConfiguration
+  - JedisClient
 - ShiroKey
-    - CookieRememberMeManager
+  - CookieRememberMeManager
 - JwtKey
-    - SpringSecurityRsaSigner
+  - SpringSecurityRsaSigner
+- 已登录的用户信息
+  - SpringSecurityUsernamePasswordAuthenticationToken
 
 更多类型支持尽请期待。
 

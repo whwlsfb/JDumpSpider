@@ -7,6 +7,13 @@ HeapDump敏感信息提取工具
 
 # 编译
 需要Maven、JDK 1.8。
+
+首先需要将netbeans-lib-profiler导入本地maven仓库
+```
+$ cd lib/
+$ mvn install:install-file -Dfile=netbeans-lib-profiler.jar -DgroupId=netbeans -DartifactId=netbeans-lib-profiler -Dversion=1.0 -Dpackaging=jar
+```
+导入完成后切换至项目根目录，运行编译打包命令
 ```
 $ mvn package
 ```

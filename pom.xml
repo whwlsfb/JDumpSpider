@@ -21,138 +21,32 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <transformers>
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>cn.wanghw.Main</mainClass>
-
-                        </transformer>
-                    </transformers>
-                    <filters>
-                        <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>**/lib/ui/**/*.*</exclude>
-                                <exclude>**/lib/ui/*.*</exclude>
-                                <exclude>**/core/ui/**/*.*</exclude>
-                                <exclude>**/core/ui/*.*</exclude>
-                                <exclude>org/netbeans/**/ui/**/*.*</exclude>
-                                <exclude>org/netbeans/**/ui/*.*</exclude>
-                                <exclude>**/dialog/**/*.*</exclude>
-                                <exclude>**/dialog/*.*</exclude>
-                                <exclude>**/windows/**/*.*</exclude>
-                                <exclude>**/windows/*.*</exclude>
-                                <exclude>**/swing/**/*.*</exclude>
-                                <exclude>**/swing/*.*</exclude>
-                                <exclude>**/awt/**/*.*</exclude>
-                                <exclude>**/awt/*.*</exclude>
-                                <exclude>**/charts/**/*.*</exclude>
-                                <exclude>**/charts/*.*</exclude>
-                                <exclude>**/uisupport/**/*.*</exclude>
-                                <exclude>**/uisupport/*.*</exclude>
-                                <exclude>org/openide/explorer/*.*</exclude>
-                                <exclude>org/openide/explorer/**/*.*</exclude>
-                                <exclude>org/graalvm/visualvm/heapviewer/*.*</exclude>
-                                <exclude>org/graalvm/visualvm/heapviewer/**/*.*</exclude>
-                                <exclude>org/graalvm/visualvm/application/*.*</exclude>
-                                <exclude>org/graalvm/visualvm/application/**/*.*</exclude>
-                                <exclude>org/openide/actions/*.*</exclude>
-                                <exclude>org/openide/actions/**/*.*</exclude>
-                                <exclude>org/openide/loaders/*.*</exclude>
-                                <exclude>org/openide/loaders/**/*.*</exclude>
-                            </excludes>
-                        </filter>
-                    </filters>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
-                    <shadedClassifierName>full</shadedClassifierName>
-                </configuration>
-            </plugin>
-            <plugin>
+           <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>5</source>
+                    <target>5</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>5</maven.compiler.source>
+        <maven.compiler.target>5</maven.compiler.target>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.graalvm.visualvm.api/org-graalvm-visualvm-application-views -->
-        <dependency>
-            <groupId>org.graalvm.visualvm.api</groupId>
-            <artifactId>org-graalvm-visualvm-application-views</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-lib-profiler-oql</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-profiler</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-lib-profiler</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-lib-profiler-heapwalker</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.graalvm.visualvm.modules/org-graalvm-visualvm-lib-jfluid-heap -->
         <dependency>
             <groupId>org.graalvm.visualvm.modules</groupId>
             <artifactId>org-graalvm-visualvm-lib-jfluid-heap</artifactId>
             <version>2.1.1</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-lib-jfluid</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.graalvm.visualvm.modules</groupId>
-            <artifactId>org-graalvm-visualvm-graalvm</artifactId>
-            <version>2.1.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/info.picocli/picocli -->
-        <dependency>
-            <groupId>info.picocli</groupId>
-            <artifactId>picocli</artifactId>
-            <version>4.6.2</version>
+            <groupId>netbeans</groupId>
+            <artifactId>netbeans-lib-profiler</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 </project>

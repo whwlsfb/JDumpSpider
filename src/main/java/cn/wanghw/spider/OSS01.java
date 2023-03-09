@@ -1,57 +1,61 @@
 package cn.wanghw.spider;
 
+import cn.wanghw.IHeapHolder;
 import cn.wanghw.ISpider;
 import cn.wanghw.utils.HashMapUtils;
-import cn.wanghw.utils.OQLSnippets;
-import org.graalvm.visualvm.lib.jfluid.heap.Heap;
-import org.graalvm.visualvm.lib.profiler.oql.engine.api.OQLEngine;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class OSS01 implements ISpider {
-    @Override
     public String getName() {
         return "OSS";
     }
 
-    private static final String searchPart =
-             "((it.searchKey.contains('oss.') || " + //aliyun oss
-              "it.searchKey.contains('cos.') || " + //tencent cos
-                     "(it.searchKey.contains('file') && " +
-                     "it.searchKey.contains('upload')) ) && " +
-             "((it.searchKey.contains('key') && " +
-                     "(it.searchKey.contains('id') || " +
-                     "it.searchKey.contains('secret') || " +
-                     "it.searchKey.contains('access'))) || " +
-             "it.searchKey.contains('bucket') || " +
-             "it.searchKey.contains('endpoint')))";
+    final List<String> ossKeywords = Collections.unmodifiableList(Arrays.asList("key", "id", "secret", "access", "bucket", "endpoint"));
 
-    @Override
-    public String sniff(Heap heap) {
-        final String[] result = {""};
-        try {
-            OQLEngine oqlEngine = new OQLEngine(heap);
-            oqlEngine.executeQuery(OQLSnippets.getValue + "filter(map(filter(heap.objects('java.util.Hashtable$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value': getValue(it.value)}\"), \"" + searchPart + "\")", o -> {
-                if (o instanceof HashMap) {
-                    HashMap<String, String> hashMap = (HashMap<String, String>) o;
-                    result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";
-                }
-                return false;
-            });
-            oqlEngine.executeQuery(OQLSnippets.getValue + "filter(map(filter(heap.objects('java.util.LinkedHashMap$Entry'),'it.key != null'), \"{'key': it.key.toString(),'searchKey': it.key.toString().toLowerCase(), 'value': getValue(it.value)}\"), \"" + searchPart + "\")", o -> {
-                if (o instanceof HashMap) {
-                    HashMap<String, String> hashMap = (HashMap<String, String>) o;
-                    result[0] += hashMap.get("key") + " = " + hashMap.get("value") + "\r\n";
-                }
-                return false;
-            });
-        } catch (Exception ex) {
-            if (result[0].equals("") && ex.getMessage().contains("is not found!")) {
-                result[0] = "not found!\r\n";
-            } else {
-                System.out.println(ex);
+    private boolean judge(String key) {
+        key = key.toLowerCase();
+        if (key.contains("oss.") || key.contains("cos.") || (key.contains("file") && key.contains("upload"))) {
+            for (String keyword : ossKeywords) {
+                if (key.contains(keyword)) return true;
             }
         }
-        return result[0];
+        return false;
+    }
+
+    public String sniff(IHeapHolder heapHolder) {
+        final StringBuilder result = new StringBuilder();
+        try {
+            LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
+            Object clazz = heapHolder.findClass("java.util.Hashtable$Entry");
+            if (clazz != null)
+                for (Object instance : heapHolder.getInstances(clazz)) {
+                    String key = heapHolder.getFieldStringValue(instance, "key");
+                    if (key != null && judge(key)) {
+                        String val = heapHolder.getFieldStringValue(instance, "value");
+                        if (val != null && !val.equals("")) {
+                            values.put(key, val);
+                        }
+                    }
+                }
+            clazz = heapHolder.findClass("java.util.LinkedHashMap$Entry");
+            if (clazz != null)
+                for (Object instance : heapHolder.getInstances(clazz)) {
+                    String key = heapHolder.getFieldStringValue(instance, "key");
+                    if (key != null && judge(key)) {
+                        String val = heapHolder.getFieldStringValue(instance, "value");
+                        if (val != null && !val.equals("")) {
+                            values.put(key, val);
+                        }
+                    }
+                }
+            result.append(HashMapUtils.dumpString(values, false));
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return result.toString();
     }
 }

@@ -31,16 +31,14 @@ $ mvn package
   - JedisClient
 - ShiroKey
   - CookieRememberMeManager
-- JwtKey
-  - SpringSecurityRsaSigner
-- 已登录的用户信息
-  - SpringSecurityUsernamePasswordAuthenticationToken
+- 模糊搜索用户信息
+  - UserPassSearcher01
 
 更多类型支持尽请期待。
 
 # 使用
 
-本工具需要使用Oracle JDK 1.8版本（更高版本将导致异常）。
+本工具需要使用Java 1.6或更高版本。
 
 ```sh
 $ java -jar .\target\JDumpSpider-1.0-SNAPSHOT-full.jar                  

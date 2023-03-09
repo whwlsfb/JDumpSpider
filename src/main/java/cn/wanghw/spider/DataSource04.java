@@ -1,37 +1,36 @@
 package cn.wanghw.spider;
 
+import cn.wanghw.IHeapHolder;
 import cn.wanghw.ISpider;
 import cn.wanghw.utils.HashMapUtils;
-import org.graalvm.visualvm.lib.jfluid.heap.Heap;
-import org.graalvm.visualvm.lib.profiler.oql.engine.api.OQLEngine;
 
 import java.util.HashMap;
 
+
 public class DataSource04 implements ISpider {
-    @Override
+
     public String getName() {
         return "AliDruidDataSourceWrapper";
     }
 
-    @Override
-    public String sniff(Heap heap) {
-        final String[] result = {""};
+
+    public String sniff(IHeapHolder heapHolder) {
+        final StringBuilder result = new StringBuilder();
         try {
-            OQLEngine oqlEngine = new OQLEngine(heap);
-            oqlEngine.executeQuery("select {'username':x.username.toString(), 'password':x.password.toString(), 'jdbcUrl': x.jdbcUrl.toString()} from com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceWrapper x", o -> {
-                if (o instanceof HashMap) {
-                    HashMap<String, String> hashMap = (HashMap<String, String>) o;
-                    result[0] += HashMapUtils.dumpString(hashMap, false) + "\r\n";
-                }
-                return false;
-            });
-        } catch (Exception ex) {
-            if (result[0].equals("") && ex.getMessage().contains("is not found!")) {
-                result[0] = "not found!\r\n";
-            } else {
-                System.out.println(ex);
+            Object clazz = heapHolder.findClass("com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceWrapper");
+            if (clazz == null)
+                return null;
+            HashMap<String, String> fieldList = new HashMap<String, String>() {{
+                put("username", "username");
+                put("password", "password");
+                put("jdbcUrl", "jdbcUrl");
+            }};
+            for (Object instance : heapHolder.getInstances(clazz)) {
+                result.append(HashMapUtils.dumpString(heapHolder.getFieldsByNameList(instance, fieldList), false));
             }
+        } catch (Exception ex) {
+            System.out.println(ex);
         }
-        return result[0];
+        return result.toString();
     }
 }

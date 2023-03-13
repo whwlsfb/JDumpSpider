@@ -23,6 +23,7 @@ public class UserPassSearcher01 implements ISpider {
             "key",
             "jdbc",
             "url",
+            "uri",
             "token",
             "database",
             "db",

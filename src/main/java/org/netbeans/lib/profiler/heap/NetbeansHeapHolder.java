@@ -36,6 +36,13 @@ public class NetbeansHeapHolder implements IHeapHolder {
         return snapshot.getClasses();
     }
 
+    public Object[] getSubClasses(Object javaClass) {
+        if (javaClass instanceof JavaClass) {
+            return ((JavaClass) javaClass).getSubClasses().toArray(new Object[0]);
+        }
+        return new JavaClass[0];
+    }
+
     public List getInstances(Object javaClass) {
         if (javaClass instanceof JavaClass) {
             return ((JavaClass) javaClass).getInstances();

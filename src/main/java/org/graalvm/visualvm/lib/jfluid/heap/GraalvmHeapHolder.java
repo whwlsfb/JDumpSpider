@@ -31,6 +31,13 @@ public class GraalvmHeapHolder implements IHeapHolder {
         return snapshot.findClass(var1);
     }
 
+    public JavaClass[] getSubClasses(Object javaClass) {
+        if (javaClass instanceof JavaClass) {
+            return ((JavaClass) javaClass).getSubClasses().toArray(new JavaClass[0]);
+        }
+        return new JavaClass[0];
+    }
+
     public Iterator getClasses() {
         return snapshot.getClasses();
     }

@@ -2,6 +2,7 @@ package cn.wanghw;
 
 
 import org.graalvm.visualvm.lib.jfluid.heap.Instance;
+import org.graalvm.visualvm.lib.jfluid.heap.JavaClass;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +12,8 @@ public interface IHeapHolder {
     Object findClass(String var1);
 
     Iterator getClasses();
+
+    Object[] getSubClasses(Object javaClass);
 
     List getInstances(Object javaClass);
 

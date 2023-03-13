@@ -9,6 +9,7 @@ import org.netbeans.lib.profiler.heap.NetbeansHeapHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.JDBCType;
 
 public class Main {
 
@@ -44,6 +45,8 @@ public class Main {
             new PropertySource03(),
             new PropertySource04(),
 ////            new JwtKey01(),
+            new PropertySource05(),
+            new EnvProperty01(),
             new OSS01(),
             new UserPassSearcher01()
     };

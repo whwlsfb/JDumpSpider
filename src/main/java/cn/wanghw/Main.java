@@ -83,12 +83,7 @@ public class Main {
             FileInputStream io = new FileInputStream(heapfile);
             io.skip(17);
             byte subVersion = (byte) io.read();
-            if (subVersion == 0x31) {
-                return 1;
-            } else if (subVersion == 0x32) {
-                return 2;
-            }
-            throw new Exception("Unrecognized file");
+            return Integer.parseInt(Character.valueOf((char) subVersion).toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

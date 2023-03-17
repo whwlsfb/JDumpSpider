@@ -9,6 +9,7 @@ import org.netbeans.lib.profiler.heap.NetbeansHeapHolder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.management.ManagementFactory;
 import java.sql.JDBCType;
 
 public class Main {
@@ -53,9 +54,9 @@ public class Main {
 
     public Integer call() throws Exception {
         int ver = getFileVersion();
-        String[] javaVersion = System.getProperty("java.version").split("\\.");
+        float classVersion = Float.parseFloat(System.getProperty("java.class.version"));
         IHeapHolder heapHolder;
-        if (ver == 1 || Integer.parseInt(javaVersion[1]) < 8) {
+        if (ver == 1 || classVersion < 52) {
             heapHolder = new NetbeansHeapHolder(heapfile);
         } else {
             heapHolder = new GraalvmHeapHolder(heapfile);

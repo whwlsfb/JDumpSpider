@@ -54,16 +54,21 @@ public class UserPassSearcher01 implements ISpider {
                 StringBuilder subResult = new StringBuilder();
                 boolean isAllEmpty = true;
                 subResult.append(heapHolder.getClassName(clazz)).append(":\r\n");
+                List<String> instanceInfo = new LinkedList<String>();
                 for (Object instance : instances) {
                     String dumpString = HashMapUtils.dumpString(heapHolder.getFieldsByNameList(instance, fieldMap), true, false, true);
                     if (!dumpString.equals("")) {
                         isAllEmpty = false;
-                        subResult.append("[").append(dumpString).append("]\r\n");
+                        instanceInfo.add("[" + dumpString + "]");
                     }
                 }
                 if (!isAllEmpty) {
-                    subResult.append("\r\n");
+                    Object[] instanceArray = (new HashSet(instanceInfo)).toArray();
                     result.append(subResult);
+                    for (Object str : instanceArray) {
+                        result.append(str).append("\r\n");
+                    }
+                    result.append("\r\n");
                 }
             }
         } catch (Exception ex) {

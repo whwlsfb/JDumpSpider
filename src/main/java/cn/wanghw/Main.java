@@ -2,19 +2,18 @@ package cn.wanghw;
 
 import cn.wanghw.spider.*;
 import org.graalvm.visualvm.lib.jfluid.heap.GraalvmHeapHolder;
-import org.netbeans.lib.profiler.heap.Heap;
-import org.netbeans.lib.profiler.heap.HeapFactory;
 import org.netbeans.lib.profiler.heap.NetbeansHeapHolder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.lang.management.ManagementFactory;
-import java.sql.JDBCType;
+import java.io.*;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
     private File heapfile;
+    private final List<String> flag = new LinkedList<String>();
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
@@ -24,6 +23,9 @@ public class Main {
             Main _main = new Main();
             _main.heapfile = new File(args[0]);
             if (_main.heapfile.exists()) {
+                if (args.length > 1) {
+                    _main.flag.addAll(Arrays.asList(args).subList(1, args.length));
+                }
                 _main.call();
             } else {
                 System.out.println("file not exist!");
@@ -56,26 +58,47 @@ public class Main {
         int ver = getFileVersion();
         float classVersion = Float.parseFloat(System.getProperty("java.class.version"));
         IHeapHolder heapHolder;
+        PrintStream out = System.out;
+
         if (ver == 1 || classVersion < 52) {
             heapHolder = new NetbeansHeapHolder(heapfile);
         } else {
             heapHolder = new GraalvmHeapHolder(heapfile);
         }
-        for (ISpider spider : allSpiders) {
-            System.out.println("===========================================");
-            System.out.println(spider.getName());
-            System.out.println("-------------");
-            String result = spider.sniff(heapHolder);
-            if (!(result == null) && !result.equals("")) {
-                System.out.println(result);
-            } else {
-                System.out.println("not found!\r\n");
-            }
+        if (flag.contains("export-strings")) {
+            spiderCall(new ExportAllString(), heapHolder, out);
+            System.exit(0);
         }
-
-        System.out.println("===========================================");
-
+        if (flag.contains("-out")) {
+            String outFilePath = getArgValue("-out");
+            System.out.println("[+] Output to: " + outFilePath);
+            out = new PrintStream(new FileOutputStream(outFilePath), true);
+        }
+        for (ISpider spider : allSpiders) {
+            spiderCall(spider, heapHolder, out);
+        }
+        out.println("===========================================");
         return 0;
+    }
+
+    private String getArgValue(String flagStr) throws Exception {
+        try {
+            return flag.get(flag.indexOf(flagStr) + 1);
+        } catch (IndexOutOfBoundsException e) {
+            throw new Exception("[-] Get '" + flagStr + "' value failed!");
+        }
+    }
+
+    private void spiderCall(ISpider spider, IHeapHolder heapHolder, PrintStream out) {
+        out.println("===========================================");
+        out.println(spider.getName());
+        out.println("-------------");
+        String result = spider.sniff(heapHolder);
+        if (!(result == null) && !result.equals("")) {
+            out.println(result);
+        } else {
+            out.println("not found!\r\n");
+        }
     }
 
     public int getFileVersion() {

@@ -14,11 +14,15 @@ public class Main {
 
     private File heapfile;
     private final List<String> flag = new LinkedList<String>();
+    static PrintStream out = null;
 
-    public static void main(String[] args) throws Exception {
+    public static String run(String[] args) throws Exception {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        if (out == null) {
+            out = new PrintStream(bout);
+        }
         if (args.length < 1) {
             System.out.println("please give a heap filepath.");
-            System.exit(-1);
         } else {
             Main _main = new Main();
             _main.heapfile = new File(args[0]);
@@ -26,12 +30,17 @@ public class Main {
                 if (args.length > 1) {
                     _main.flag.addAll(Arrays.asList(args).subList(1, args.length));
                 }
-                _main.call();
+                _main.call(out);
             } else {
                 System.out.println("file not exist!");
-                System.exit(-1);
             }
         }
+        return bout.toString();
+    }
+
+    public static void main(String[] args) throws Exception {
+        out = System.out;
+        run(args);
     }
 
     private ISpider[] allSpiders = new ISpider[]{
@@ -54,11 +63,10 @@ public class Main {
             new UserPassSearcher01()
     };
 
-    public Integer call() throws Exception {
+    public int call(PrintStream out) throws Exception {
         int ver = getFileVersion();
         float classVersion = Float.parseFloat(System.getProperty("java.class.version"));
         IHeapHolder heapHolder;
-        PrintStream out = System.out;
 
         if (ver == 1 || classVersion < 52) {
             heapHolder = new NetbeansHeapHolder(heapfile);
@@ -67,7 +75,7 @@ public class Main {
         }
         if (flag.contains("export-strings")) {
             spiderCall(new ExportAllString(), heapHolder, out);
-            System.exit(0);
+            return 0;
         }
         if (flag.contains("-out")) {
             String outFilePath = getArgValue("-out");

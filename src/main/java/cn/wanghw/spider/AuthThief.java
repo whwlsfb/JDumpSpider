@@ -6,19 +6,19 @@ import cn.wanghw.utils.HashMapUtils;
 
 import java.util.*;
 
-public class OSS01 implements ISpider {
+public class AuthThief implements ISpider {
     public String getName() {
-        return "OSS";
+        return "AuthThief";
     }
-
-    final List<String> ossKeywords = Collections.unmodifiableList(Arrays.asList("key", "id", "secret", "access", "bucket", "endpoint"));
 
     private boolean judge(String key) {
         key = key.toLowerCase();
-        if (key.contains("oss.") || key.contains("cos.") || (key.contains("file") && key.contains("upload"))) {
-            for (String keyword : ossKeywords) {
-                if (key.contains(keyword)) return true;
-            }
+        if (key.equals("authorization")) {
+            return true;
+        } else if (key.contains("auth")) {
+            return true;
+        } else if (key.contains("cookie")) {
+            return true;
         }
         return false;
     }
@@ -26,7 +26,6 @@ public class OSS01 implements ISpider {
     public String sniff(IHeapHolder heapHolder) {
         final StringBuilder result = new StringBuilder();
         try {
-            LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
             List<Object> mapEntryClasses = new ArrayList<Object>();
             for (Iterator it = heapHolder.getClasses(); it.hasNext(); ) {
                 Object clazz = it.next();
@@ -35,9 +34,13 @@ public class OSS01 implements ISpider {
                     mapEntryClasses.add(clazz);
             }
             for (Object clazz : mapEntryClasses) {
+                LinkedHashMap<String, String> values = new LinkedHashMap<String, String>();
                 dump(heapHolder, values, clazz);
+                if (!values.isEmpty()) {
+                    result.append(heapHolder.getClassName(clazz)).append(":\r\n");
+                    result.append(HashMapUtils.dumpString(values, false)).append("\r\n");
+                }
             }
-            result.append(HashMapUtils.dumpString(values, false));
         } catch (Exception ex) {
             System.out.println(ex);
         }
@@ -54,5 +57,22 @@ public class OSS01 implements ISpider {
                 }
             }
         }
+        Object[] subClasses = heapHolder.getSubClasses(clazz);
+        if (subClasses != null && subClasses.length > 0) {
+            for (Object subClazz : subClasses) {
+                dump(heapHolder, values, subClazz);
+            }
+        }
+    }
+
+    public List<Object> getFields(IHeapHolder heapHolder, Object clazz) {
+        List<Object> fieldList = new LinkedList<Object>();
+        while (!heapHolder.getClassName(clazz).equals(Object.class.getName())) {
+            for (Object f : heapHolder.getFields(clazz)) {
+                fieldList.add(f);
+            }
+            clazz = heapHolder.getSuperClass(clazz);
+        }
+        return fieldList;
     }
 }

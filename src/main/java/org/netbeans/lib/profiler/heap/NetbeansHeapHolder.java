@@ -57,11 +57,34 @@ public class NetbeansHeapHolder implements IHeapHolder {
         return new ArrayList();
     }
 
+    public List hasField(Object javaClass, String fieldName) {
+        if (javaClass instanceof JavaClass) {
+            return ((JavaClass) javaClass).getFields();
+        }
+        return new ArrayList();
+    }
+
     public String getClassName(Object javaClass) {
         if (javaClass instanceof JavaClass) {
             return ((JavaClass) javaClass).getName();
         }
         return null;
+    }
+
+    public boolean isInstanceOf(Object javaClass, String className) {
+        if (javaClass instanceof JavaClass) {
+            JavaClass cls = (JavaClass) javaClass;
+            for (; cls != null; cls = cls.getSuperClass())
+                if (cls.getName().equals(className)) return true;
+        }
+        return false;
+    }
+
+    public boolean isArray(Object javaClass) {
+        if (javaClass instanceof JavaClass) {
+            return ((JavaClass) javaClass).isArray();
+        }
+        return false;
     }
 
     public Object getSuperClass(Object javaClass) {
@@ -74,6 +97,13 @@ public class NetbeansHeapHolder implements IHeapHolder {
     public String getFieldName(Object field) {
         if (field instanceof Field) {
             return ((Field) field).getName();
+        }
+        return null;
+    }
+
+    public Object getFieldClass(Object field) {
+        if (field instanceof Field) {
+            return snapshot.findClass(((Field) field).getType().getName());
         }
         return null;
     }
@@ -163,6 +193,8 @@ public class NetbeansHeapHolder implements IHeapHolder {
         String instanceClassName = instance.getJavaClass().getName();
         if (instanceClassName.equals("java.lang.String")) {
             PrimitiveArrayDump arrayDump = (PrimitiveArrayDump) (instance.getValueOfField("value"));
+            if (arrayDump == null)
+                return "";
             if (arrayDump.getJavaClass().getName().equals("byte[]")) {
                 List<String> byteStr = arrayDump.getValues();
                 byte[] target = new byte[byteStr.size()];

@@ -60,7 +60,9 @@ public class Main {
             new PropertySource05(),
             new EnvProperty01(),
             new OSS01(),
-            new UserPassSearcher01()
+            new UserPassSearcher01(),
+            new CookieThief(),
+            new AuthThief()
     };
 
     public int call(PrintStream out) throws Exception {

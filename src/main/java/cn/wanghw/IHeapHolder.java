@@ -13,6 +13,10 @@ public interface IHeapHolder {
 
     Iterator getClasses();
 
+    boolean isInstanceOf(Object javaClass, String className);
+
+    boolean isArray(Object javaClass);
+
     Object[] getSubClasses(Object javaClass);
 
     List getInstances(Object javaClass);
@@ -24,6 +28,8 @@ public interface IHeapHolder {
     Object getSuperClass(Object javaClass);
 
     String getFieldName(Object field);
+
+    Object getFieldClass(Object field);
 
     Object findThing(Long objectId);
 

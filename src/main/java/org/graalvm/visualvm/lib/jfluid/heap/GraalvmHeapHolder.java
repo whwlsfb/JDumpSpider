@@ -31,6 +31,22 @@ public class GraalvmHeapHolder implements IHeapHolder {
         return snapshot.findClass(var1);
     }
 
+    public boolean isArray(Object javaClass) {
+        if (javaClass instanceof JavaClass) {
+            return ((JavaClass) javaClass).isArray();
+        }
+        return false;
+    }
+
+    public boolean isInstanceOf(Object javaClass, String className) {
+        if (javaClass instanceof JavaClass) {
+            JavaClass cls = (JavaClass) javaClass;
+            for (; cls != null; cls = cls.getSuperClass())
+                if (cls.getName().equals(className)) return true;
+        }
+        return false;
+    }
+
     public JavaClass[] getSubClasses(Object javaClass) {
         if (javaClass instanceof JavaClass) {
             return ((JavaClass) javaClass).getSubClasses().toArray(new JavaClass[0]);
@@ -73,6 +89,13 @@ public class GraalvmHeapHolder implements IHeapHolder {
     public String getFieldName(Object field) {
         if (field instanceof Field) {
             return ((Field) field).getName();
+        }
+        return null;
+    }
+
+    public Object getFieldClass(Object field) {
+        if (field instanceof Field) {
+            return ((Field) field).getDeclaringClass();
         }
         return null;
     }
@@ -194,6 +217,8 @@ public class GraalvmHeapHolder implements IHeapHolder {
         String instanceClassName = instance.getJavaClass().getName();
         if (instanceClassName.equals("java.lang.String")) {
             PrimitiveArrayDump arrayDump = (PrimitiveArrayDump) (instance.getValueOfField("value"));
+            if (arrayDump == null)
+                return "";
             if (arrayDump.getJavaClass().getName().equals("byte[]")) {
                 List<String> byteStr = arrayDump.getValues();
                 byte[] target = new byte[byteStr.size()];

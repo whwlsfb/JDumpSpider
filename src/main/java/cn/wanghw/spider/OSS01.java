@@ -15,7 +15,7 @@ public class OSS01 implements ISpider {
 
     private boolean judge(String key) {
         key = key.toLowerCase();
-        if (key.contains("oss.") || key.contains("cos.") || (key.contains("file") && key.contains("upload"))) {
+        if (key.contains("oss.") || key.contains("s3.") || key.contains("cos.") || (key.contains("file") && key.contains("upload"))) {
             for (String keyword : ossKeywords) {
                 if (key.contains(keyword)) return true;
             }

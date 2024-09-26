@@ -33,7 +33,9 @@ public class UserPassSearcher01 implements ISpider {
             "enterprise",
             "login",
             "server",
-            "addr"
+            "addr" ,
+            "iv",
+            "salt"
     ));
 
     public String sniff(IHeapHolder heapHolder) {

@@ -26,7 +26,7 @@ public class Main {
         } else {
             Main _main = new Main();
             _main.heapfile = new File(args[0]);
-            if (_main.heapfile.exists()) {
+            if (_main.heapfile.exists() && _main.heapfile.isFile()) {
                 if (args.length > 1) {
                     _main.flag.addAll(Arrays.asList(args).subList(1, args.length));
                 }
@@ -36,6 +36,26 @@ public class Main {
             }
         }
         return bout.toString();
+    }
+
+    public static String runAsync(final String[] args) throws Exception {
+        if (args.length < 2)
+            return "In async call, you must give a result file path";
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    String result = Main.run(args);
+                    FileOutputStream fos = new FileOutputStream(args[1]);
+                    fos.write(result.getBytes());
+                    fos.close();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+        return "start export thread:" + thread.getName();
     }
 
     public static void main(String[] args) throws Exception {

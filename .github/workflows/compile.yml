@@ -35,7 +35,7 @@ jobs:
           title: Auto Build - ${{ env.NOW }}
           files: release/*.jar
       - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           # Artifact name
           name: JDumpSpider_${{ env.NOW }}

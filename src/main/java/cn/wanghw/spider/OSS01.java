@@ -11,11 +11,11 @@ public class OSS01 implements ISpider {
         return "OSS";
     }
 
-    final List<String> ossKeywords = Collections.unmodifiableList(Arrays.asList("key", "id", "secret", "access", "bucket", "endpoint"));
+    final List<String> ossKeywords = Collections.unmodifiableList(Arrays.asList("key", "id", "secret", "access", "bucket", "endpoint", "sk"));
 
     private boolean judge(String key) {
         key = key.toLowerCase();
-        if (key.contains("oss.") || key.contains("s3.") || key.contains("cos.") || (key.contains("file") && key.contains("upload"))) {
+        if (key.contains("oss.") || key.contains("s3.") || key.contains("cos.") || key.contains("lbs.") || (key.contains("file") && key.contains("upload"))) {
             for (String keyword : ossKeywords) {
                 if (key.contains(keyword)) return true;
             }
@@ -31,7 +31,8 @@ public class OSS01 implements ISpider {
             for (Iterator it = heapHolder.getClasses(); it.hasNext(); ) {
                 Object clazz = it.next();
                 String clazzName = heapHolder.getClassName(clazz).toLowerCase();
-                if (clazzName.contains("$") && (clazzName.split("\\$")[1].endsWith("entry")))
+                if (clazzName.contains("$") &&
+                        (clazzName.split("\\$")[1].endsWith("entry") || clazzName.split("\\$")[1].endsWith("node")))
                     mapEntryClasses.add(clazz);
             }
             for (Object clazz : mapEntryClasses) {
